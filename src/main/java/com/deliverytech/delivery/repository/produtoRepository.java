@@ -1,5 +1,16 @@
 package com.deliverytech.delivery.repository;
 
-public class produtoRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.deliverytech.delivery.entity.produto;
+
+@Repository
+public interface produtoRepository extends JpaRepository <produto, Long> {
+
+    // Buscar produto por restaurante ID
+    List<produto> findByRestauranteId(Long restauranteId);
 
 }
