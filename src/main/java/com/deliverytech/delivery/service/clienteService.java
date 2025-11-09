@@ -1,6 +1,5 @@
 package com.deliverytech.delivery.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deliverytech.delivery.entity.cliente;
+import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.repository.clienteRepository;
 
 @Service
@@ -21,7 +20,7 @@ public class clienteService {
      /**
      * Cadastrar novo cliente
      */
-    public cliente cadastrar(cliente cliente) {
+    public Cliente cadastrar(Cliente cliente) {
         // Validar email único
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado: " + cliente.getEmail());
@@ -41,7 +40,7 @@ public class clienteService {
      * Buscar cliente por Id
      */
     @Transactional (readOnly = true)
-    public Optional<cliente> buscarPorId(Long id) {
+    public Optional<Cliente> buscarPorId(Long id) {
         return clienteRepository.findById(id);
     }
 
@@ -49,7 +48,7 @@ public class clienteService {
      * Buscar cliente por email
      */
     @Transactional (readOnly = true)
-    public Optional<cliente> buscarPorEmail(String email) {
+    public Optional<Cliente> buscarPorEmail(String email) {
         return clienteRepository.findByEmail(email);
     }
 
@@ -57,15 +56,15 @@ public class clienteService {
      * Listar todos os clientes ativos
      */
     @Transactional (readOnly = true)
-    public List<cliente> listarAtivos() {
+    public List<Cliente> listarAtivos() {
         return clienteRepository.findByAtivoTrue();
     }
 
     /**
      * Atualizar dados do cliente
      */
-    public cliente atualizar(Long id, cliente clienteAtualizado) {
-       cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+    public Cliente atualizar(Long id, Cliente clienteAtualizado) {
+       Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
 
        // Verificar se o email não está sendo usado por outro cliente
        if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) && clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
@@ -85,7 +84,7 @@ public class clienteService {
      * Inativar cliente (soft delete)
      */
     public void inativar(Long id) {
-        cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+        Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
 
         cliente.inativar();
         clienteRepository.save(cliente);
@@ -95,11 +94,11 @@ public class clienteService {
      * Buscar clientes por nome
      */
     @Transactional (readOnly = true)
-    public List<cliente> buscarPorNome(String nome) {
+    public List<Cliente> buscarPorNome(String nome) {
         return clienteRepository.findByNomeContainingIgnoreCase(nome);
     }
 
-    private void validarDadosCliente(cliente cliente) {
+    private void validarDadosCliente(Cliente cliente) {
         if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
             throw new IllegalArgumentException("Nome é orbigatório");
         }

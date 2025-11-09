@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.deliverytech.delivery.entity.pedido;
+import com.deliverytech.delivery.entity.Pedido;
 
 @Repository
-public interface pedidoRepository extends JpaRepository <pedido, Long> {
+public interface pedidoRepository extends JpaRepository <Pedido, Long> {
 
     //Buscar pedidos por cliente ID
-    List<pedido> findByClienteIdOrderByDataPedidoDesc(Long clienteId);
+    List<Pedido> findByClienteIdOrderByDataPedidoDesc(Long clienteId);
 
     // Buscar por número do pedido
-    pedido findByNumeropedido(String numeroPedido);
+    Pedido findByNumeroPedido(String numeroPedido);
 
     //Buscar pedidos por restaurante ID
-    List<pedido> findByRestauranteIdOrderByDataPedidoDesc (Long restauranteId);
+    List<Pedido> findByRestauranteIdOrderByDataPedidoDesc (Long restauranteId);
 
 
 }

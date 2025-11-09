@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.deliverytech.delivery.entity.cliente;
+import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.service.clienteService;
 
 @RestController
@@ -32,9 +32,9 @@ public class clienteController {
      * Cadastrar novo cliente
      */
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Validated @RequestBody cliente cliente) {
+    public ResponseEntity<?> cadastrar(@Validated @RequestBody Cliente cliente) {
         try {
-            cliente clienteSalvo = clienteService.cadastrar(cliente);
+            Cliente clienteSalvo = clienteService.cadastrar(cliente);
             return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
@@ -47,8 +47,8 @@ public class clienteController {
      * Listar todos os clientes ativos
      */
      @GetMapping
-     public ResponseEntity<List<cliente>> listar() {
-        List<cliente> clientes = clienteService.listarAtivos();
+     public ResponseEntity<List<Cliente>> listar() {
+        List<Cliente> clientes = clienteService.listarAtivos();
         return ResponseEntity.ok(clientes);
      }
 
@@ -58,7 +58,7 @@ public class clienteController {
      */
      @GetMapping("/{id}")
      public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        Optional<cliente> cliente = clienteService.buscarPorId(id);
+        Optional<Cliente> cliente = clienteService.buscarPorId(id);
         
         if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get());
@@ -71,9 +71,9 @@ public class clienteController {
      * Atualizar cliente
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @Validated @RequestBody cliente cliente) {
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @Validated @RequestBody Cliente cliente) {
         try {
-            cliente clienteAtualizado = clienteService.atualizar(id, cliente);
+            Cliente clienteAtualizado = clienteService.atualizar(id, cliente);
             return ResponseEntity.ok(clienteAtualizado);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
@@ -102,7 +102,7 @@ public class clienteController {
      */
     @GetMapping("/buscar")
      public ResponseEntity<?> buscarPorNome(@RequestParam String nome) {
-        List<cliente> clientes = clienteService.buscarPorNome(nome);
+        List<Cliente> clientes = clienteService.buscarPorNome(nome);
         return ResponseEntity.ok(clientes);
      }
 
@@ -111,7 +111,7 @@ public class clienteController {
      */
     @GetMapping("/email/{email}")
     public ResponseEntity<?> buscarPorEmail(@PathVariable String email) {
-        Optional<cliente> cliente = clienteService.buscarPorEmail(email);
+        Optional<Cliente> cliente = clienteService.buscarPorEmail(email);
 
         if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get());

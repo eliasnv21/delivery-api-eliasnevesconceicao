@@ -6,19 +6,19 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.deliverytech.delivery.entity.restaurante;
+import com.deliverytech.delivery.entity.Restaurante;
 
 @Repository
-public interface restauranteRepository extends JpaRepository<restaurante, Long> {
+public interface restauranteRepository extends JpaRepository<Restaurante, Long> {
 
     //Buscar por nome
-    Optional<restaurante> findByNome(String nome);
+    Optional<Restaurante> findByNome(String nome);
 
     // Buscar restaurantes ativos
-    List<restaurante> findByAtivoTrue();
+    List<Restaurante> findByAtivoTrue();
 
     // Buscar por categoria
-    List<restaurante> findByCategoria(String categoria);
+    List<Restaurante> findByCategoria(String categoria);
 
 
 

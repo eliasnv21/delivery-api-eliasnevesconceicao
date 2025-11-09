@@ -5,21 +5,22 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.deliverytech.delivery.entity.cliente;
+
+import com.deliverytech.delivery.entity.Cliente;
 
 @Repository
-public interface clienteRepository extends JpaRepository<cliente, Long> {
+public interface clienteRepository extends JpaRepository<Cliente, Long> {
 
     // Buscar cliene por email (método derivado)
-    Optional<cliente> findByEmail (String email);
+    Optional<Cliente> findByEmail (String email);
 
     // Verificar se o email já existe
     boolean existsByEmail (String email);
 
     // Buscar clientes ativos
-    List<cliente> findByAtivoTrue();
+    List<Cliente> findByAtivoTrue();
 
     // Buscar clientes por nome (contendo)
-    List<cliente> findByNomeContainingIgnoreCase(String nome);
+    List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
 }
