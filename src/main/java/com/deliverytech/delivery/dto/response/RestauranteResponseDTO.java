@@ -1,15 +1,11 @@
-package com.deliverytech.delivery.dto;
+package com.deliverytech.delivery.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class RestauranteRequestDTO {
+public class RestauranteResponseDTO {
+
     private Long id;
     private String nome;
     private String categoria;
@@ -18,4 +14,5 @@ public class RestauranteRequestDTO {
     private BigDecimal taxaEntrega;
     private BigDecimal avaliacao;
     private Boolean ativo;
+
 }

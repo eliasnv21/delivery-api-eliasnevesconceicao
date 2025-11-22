@@ -13,18 +13,29 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ValidationErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
-        ValidationErrorResponse error = new ValidationErrorResponse(HttpStatus.NOT_FOUND.value(), "Entidade não encontrada", ex.getMessage(), LocalDateTime.now());
+        ValidationErrorResponse error = new ValidationErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Entidade não encontrada",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ValidationErrorResponse> handleBusinessException(BusinessException ex) {
-        ValidationErrorResponse error = new ValidationErrorResponse(HttpStatus.BAD_REQUEST.value(),"Erro de regra de negócio", ex.getMessage(), LocalDateTime.now());
+        ValidationErrorResponse error = new ValidationErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Erro de regra de negócio",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(
+            MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {

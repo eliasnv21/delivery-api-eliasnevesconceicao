@@ -1,127 +1,30 @@
 package com.deliverytech.delivery.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.deliverytech.delivery.dto.request.ProdutoRequestDTO;
+import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
 
-import com.deliverytech.delivery.dto.ProdutoRequestDTO;
-import com.deliverytech.delivery.entity.Produto;
-import com.deliverytech.delivery.repository.produtoRepository;
-import com.deliverytech.delivery.repository.restauranteRepository;
+public interface produtoService {
 
-@Service
-public class produtoService {
+    ProdutoResponseDTO cadastrar(ProdutoRequestDTO dto);
 
-    @Autowired
-    private produtoRepository produtoRepository;
+    ProdutoResponseDTO buscarPorId(Long id);
 
-    @Autowired
-    private restauranteRepository restauranteRepository;
+    ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto);
 
-    /**
-     * Cadastrar novo produto
-     */
-    public Produto cadastrar(Produto produto) {
+    ProdutoResponseDTO ativarDesativarProduto(Long id);
 
-        produto.setRestauranteId(produto.getRestauranteId());
-        produto.setDisponivel(produto.getDisponivel());
+    ProdutoResponseDTO buscarPorNome(String nome);
 
-        return produtoRepository.save(produto);
-    }
+    List<ProdutoResponseDTO>  buscarPorRestaurante(Long restauranteId);
 
-    /**
-     * Listar todos os produtos
-     */
-    public List<ProdutoRequestDTO> listarTodos() {
-        List<Produto> produtos = produtoRepository.findAll();
-        List<ProdutoRequestDTO> produtosDTO = new ArrayList<>();
+    List<ProdutoResponseDTO> buscarPorCategoria(String categoria);
 
-        for (Produto produto : produtos) {
-            ProdutoRequestDTO dto = new ProdutoRequestDTO(produto.getId(), produto.getNome(), produto.getDescricao(),
-                    produto.getPreco(), produto.getCategoria(), produto.getDisponivel());
-            produtosDTO.add(dto);
-        }
+    List<ProdutoResponseDTO> buscarPorPreco(BigDecimal precoMinimo, BigDecimal precoMaximo);
 
-        return produtosDTO;
-    }
+    List<ProdutoResponseDTO> buscarTodosProdutos();
 
-    /**
-     * Buscar produto por ID
-     */
-    public Produto buscarPorId(Long id) {
-        return produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
-    }
-
-    /**
-     * Atualizar produto
-     */
-    @Transactional
-    public Produto atualizar(Long id, Produto produtoAtualizado) {
-        Produto produtoExistente = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
-
-        validarDadosProduto(produtoAtualizado);
-
-        produtoExistente.setNome(produtoAtualizado.getNome());
-        produtoExistente.setDescricao(produtoAtualizado.getDescricao());
-        produtoExistente.setPreco(produtoAtualizado.getPreco());
-        produtoExistente.setCategoria(produtoAtualizado.getCategoria());
-        produtoExistente.setDisponivel(produtoAtualizado.getDisponivel());
-
-        return produtoRepository.save(produtoExistente);
-    }
-
-    /**
-     * Excluir produto
-     */
-    @Transactional
-    public void excluir(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
-
-        produtoRepository.delete(produto);
-    }
-
-    /**
-     * Método para validação de dados
-     */
-    private void validarDadosProduto(Produto produto) {
-        if (produto.getNome() == null || produto.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Nome do produto é obrigatório!");
-        }
-        if (produto.getDescricao() == null || produto.getDescricao().isEmpty()) {
-            throw new IllegalArgumentException("Descrição do produto é obrigatória!");
-        }
-        if (produto.getPreco() == null || produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Preço do produto deve ser maior que zero!");
-        }
-        if (produto.getCategoria() == null || produto.getCategoria().isEmpty()) {
-            throw new IllegalArgumentException("Categoria do produto é obrigatória!");
-        }
-    }
-
-    /**
-     * Buscar produtos por restaurante
-     */
-    public List<Produto> buscarPorRestaurante(Long restauranteId) {
-        return produtoRepository.findByRestauranteId(restauranteId);
-    }
-
-    public Produto inativar(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
-
-        if (!produto.getDisponivel()) {
-            throw new IllegalArgumentException("Produto " + id + " já está inativo.");
-        }
-
-        produto.setDisponivel(false);
-        return produtoRepository.save(produto);
-    }
-
+    List<ProdutoResponseDTO> buscarPorPrecoMenorOuIgual(BigDecimal valor);
 }

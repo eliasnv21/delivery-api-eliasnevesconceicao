@@ -1,85 +1,24 @@
 package com.deliverytech.delivery.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.deliverytech.delivery.dto.PedidoRequestDTO;
-import com.deliverytech.delivery.entity.Cliente;
-import com.deliverytech.delivery.entity.Pedido;
-import com.deliverytech.delivery.entity.Restaurante;
+import com.deliverytech.delivery.dto.request.ItemPedidoRequestDTO;
+import com.deliverytech.delivery.dto.request.PedidoRequestDTO;
+import com.deliverytech.delivery.dto.response.PedidoResponseDTO;
 import com.deliverytech.delivery.enums.StatusPedido;
-import com.deliverytech.delivery.repository.clienteRepository;
-import com.deliverytech.delivery.repository.pedidoRepository;
-import com.deliverytech.delivery.repository.produtoRepository;
-import com.deliverytech.delivery.repository.restauranteRepository;
+public interface pedidoService {
 
-@Service
-public class pedidoService {
+    PedidoResponseDTO criarPedido(PedidoRequestDTO dto);
 
-    @Autowired
-    private pedidoRepository pedidoRepository;
+    PedidoResponseDTO buscarPorId(Long id);
 
-    @Autowired
-    private clienteRepository clienteRepository;
+    List<PedidoResponseDTO> listarPedidosPorCliente(Long clienteId);
 
-    @Autowired
-    private restauranteRepository restauranteRepository;
+    PedidoResponseDTO atualizarStatusPedido(Long id, StatusPedido status);
 
-    @Autowired
-    private produtoRepository produtoRepository;
+    BigDecimal calcularValorTotalPedido(List<ItemPedidoRequestDTO> itens );
 
-    /**
-     * Criar novo pedido
-     */
-    public Pedido criarPedido(PedidoRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(() -> new IllegalArgumentException("Cliente " + dto.getClienteId() + " não encontrado."));
+    PedidoResponseDTO cancelarPedido(Long id);
 
-        Restaurante restaurante = restauranteRepository.findById(dto.getRestauranteId()).orElseThrow(() -> new IllegalArgumentException("Restaurante " + dto.getRestauranteId() + " não encontrado."));
-
-        if (!cliente.getAtivo()) {
-            throw new IllegalArgumentException("Cliente inativo não pode fazer pedidos");
-        }
-
-        if (!restaurante.getAtivo()) {
-            throw new IllegalArgumentException("Restaurante não está disponível");
-        }
-
-        Pedido pedido = new Pedido();
-        pedido.setClienteId(cliente.getId());
-        pedido.setRestaurante(restaurante);
-        pedido.setStatus(StatusPedido.PENDENTE.name());
-        pedido.setDataPedido(dto.getDataPedido());
-        pedido.setNumeroPedido(dto.getNumeroPedido());
-        pedido.setValorTotal(dto.getValorTotal());
-        pedido.setObservacoes(dto.getObservacoes());
-        pedido.setItens(dto.getItens());
-
-        return pedidoRepository.save(pedido);
-    }
-
-    /**
-     * Listar pedidos por cliente
-     */
-    @Transactional(readOnly = true)
-    public List<Pedido> listarPorCliente (Long clienteId) {
-        return pedidoRepository.findByClienteIdOrderByDataPedidoDesc(clienteId);
-    }
-
-    /**
-     * Atualizar status do pedido
-     */
-    public Pedido atualizarStatus(Long pedidoId, StatusPedido status) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new IllegalArgumentException("Pedido " + pedidoId + " não encontrado."));
-
-        if (pedido.getStatus().equals(StatusPedido.ENTREGUE.name())) {
-            throw new IllegalArgumentException("Pedido " + pedidoId + " já finalizado.");
-        }
-
-        pedido.setStatus(status.name());
-        return pedidoRepository.save(pedido);
-    }
-
-}
+} 

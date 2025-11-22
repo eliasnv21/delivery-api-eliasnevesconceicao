@@ -1,6 +1,9 @@
 package com.deliverytech.delivery.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +29,8 @@ public class Restaurante {
 
     private String telefone;
 
+    private String cep;
+
     @Column(name = "taxa_entrega")
     private BigDecimal taxaEntrega;
 
@@ -33,8 +38,16 @@ public class Restaurante {
 
     private Boolean ativo;
 
-    public void inativar() {
-        this.ativo = false;
+    @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Produto> produtos;
+
+    @OneToMany(mappedBy = "restaurante", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Pedido> pedidos;
+
+    public boolean isAtivo() {
+        return this.ativo != null && this.ativo;
     }
 
 }

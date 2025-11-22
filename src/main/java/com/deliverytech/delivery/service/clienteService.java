@@ -1,117 +1,24 @@
 package com.deliverytech.delivery.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.deliverytech.delivery.dto.request.ClienteRequestDTO;
+import com.deliverytech.delivery.dto.response.ClienteResponseDTO;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+public interface clienteService {
 
-import com.deliverytech.delivery.dto.ClienteRequestDTO;
-import com.deliverytech.delivery.dto.ClienteResponseDTO;
-import com.deliverytech.delivery.entity.Cliente;
-import com.deliverytech.delivery.repository.clienteRepository;
+    ClienteResponseDTO cadastrar(ClienteRequestDTO dto);
 
-@Service
-@Transactional
-public class clienteService {
-    @Autowired
-    private clienteRepository clienteRepository;
+    ClienteResponseDTO buscarPorId(Long idLong);
 
-     /**
-     * Cadastrar novo cliente
-     */
-    public Cliente cadastrar(Cliente cliente) {
-        // Validar email único
-        if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            throw new IllegalArgumentException("Email " + cliente.getEmail() + " já cadastrado.");
-        }
+    ClienteResponseDTO buscarPorEmail(String email);
 
-        // Validações de negócio
-        validarDadosCliente(cliente);
+    ClienteResponseDTO atualizar(Long id, ClienteRequestDTO dto);
 
-        // Definir como ativo por padrão
-        cliente.setAtivo(true);
+    ClienteResponseDTO ativarDesativarCliente(Long id);
 
-        return clienteRepository.save(cliente);
+    List<ClienteResponseDTO> listarAtivos();
 
-    }
+    List<ClienteResponseDTO> buscarPorNome(String nome);
 
-     /**
-     * Buscar cliente por Id
-     */
-    @Transactional (readOnly = true)
-    public Optional<Cliente> buscarPorId(Long id) {
-        return clienteRepository.findById(id);
-    }
-
-     /**
-     * Buscar cliente por email
-     */
-    @Transactional (readOnly = true)
-    public Optional<Cliente> buscarPorEmail(String email) {
-        return clienteRepository.findByEmail(email);
-    }
-
-    /**
-     * Listar todos os clientes ativos
-     */
-    @Transactional (readOnly = true)
-    public List<Cliente> listarAtivos() {
-        return clienteRepository.findByAtivoTrue();
-    }
-
-    /**
-     * Atualizar dados do cliente
-     */
-    public Cliente atualizar(Long id, Cliente clienteAtualizado) {
-       Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente " + id + " não encontrado."));
-
-       // Verificar se o email não está sendo usado por outro cliente
-       if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) && clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
-        throw new IllegalArgumentException("Email " + clienteAtualizado.getEmail() + " já cadastrado.");
-       }
-
-       // Atualizar campos
-       cliente.setNome(clienteAtualizado.getNome());
-       cliente.setEmail(clienteAtualizado.getEmail());
-       cliente.setTelefone(clienteAtualizado.getTelefone());
-       cliente.setEndereco(clienteAtualizado.getEndereco());
-
-       return clienteRepository.save(cliente);
-    }
-
-    /**
-     * Inativar cliente (soft delete)
-     */
-    public void inativar(Long id) {
-        Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente " + id + " não encontrado."));
-
-        cliente.inativar();
-        clienteRepository.save(cliente);
-    }
-
-    /**
-     * Buscar clientes por nome
-     */
-    @Transactional (readOnly = true)
-    public List<Cliente> buscarPorNome(String nome) {
-        return clienteRepository.findByNomeContainingIgnoreCase(nome);
-    }
-
-    private void validarDadosCliente(Cliente cliente) {
-        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome é orbigatório!");
-        }
-
-        if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email é obrigatório!");
-        }
-
-        if (cliente.getNome().length() < 2) {
-            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres!");
-        }
-    }
-    
 }

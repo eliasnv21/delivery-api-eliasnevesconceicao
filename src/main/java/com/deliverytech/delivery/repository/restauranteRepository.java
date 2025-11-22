@@ -1,12 +1,15 @@
 package com.deliverytech.delivery.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.deliverytech.delivery.entity.Restaurante;
+import com.deliverytech.delivery.projection.RelatorioVendas;
 
 @Repository
 public interface restauranteRepository extends JpaRepository<Restaurante, Long> {
@@ -17,8 +20,30 @@ public interface restauranteRepository extends JpaRepository<Restaurante, Long> 
     // Buscar restaurantes ativos
     List<Restaurante> findByAtivoTrue();
 
+    //buscar por nome e ativo
+    Restaurante findByNomeAndAtivoTrue(String nome);
+
     // Buscar por categoria
     List<Restaurante> findByCategoria(String categoria);
+
+    // Por taxa de entrega menor ou igual
+    List<Restaurante> findByTaxaEntregaLessThanEqual(BigDecimal taxa);
+
+    // Top 5 restaurantes por nome (ordem alfabética)
+    List<Restaurante> findTop5ByOrderByNomeAsc();
+
+    // No RestauranteRepository:
+    @Query("SELECT r.nome as nomeRestaurante, " +
+            "SUM(p.valorTotal) as totalVendas, " +
+            "COUNT(p.id) as quantidePedidos " +
+            "FROM Restaurante r " +
+            "LEFT JOIN Pedido p ON r.id = p.restaurante.id " +
+            "GROUP BY r.id, r.nome")
+    List<RelatorioVendas> relatorioVendasPorRestaurante();
+
+    List<Restaurante> findByTaxaEntregaBetween(BigDecimal precoMinimo, BigDecimal precoMaximo);
+
+
 
 
 
