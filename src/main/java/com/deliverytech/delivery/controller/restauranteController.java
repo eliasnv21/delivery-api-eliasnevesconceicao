@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.deliverytech.delivery.dto.RestauranteRequestDTO;
 import com.deliverytech.delivery.entity.Restaurante;
-import com.deliverytech.delivery.entity.RestauranteDTO;
 import com.deliverytech.delivery.service.restauranteService;
 
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class restauranteController {
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         try {
-            Optional<RestauranteDTO> restaurante = restauranteService.findById(id);
+            Optional<RestauranteRequestDTO> restaurante = restauranteService.findById(id);
             if (restaurante != null) {
                 return ResponseEntity.ok(restaurante);
             } else {

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliverytech.delivery.dto.PedidoRequestDTO;
 import com.deliverytech.delivery.entity.Pedido;
-import com.deliverytech.delivery.entity.PedidoDTO;
 import com.deliverytech.delivery.enums.StatusPedido;
 import com.deliverytech.delivery.service.pedidoService;
 
@@ -31,7 +31,7 @@ public class pedidoController {
      * Criar novo pedido
      */
     @PostMapping
-    public ResponseEntity<?> criarPedido(@RequestBody PedidoDTO dto) {
+    public ResponseEntity<?> criarPedido(@RequestBody PedidoRequestDTO dto) {
         try {
             Pedido pedido = pedidoService.criarPedido(dto);
             return ResponseEntity.ok(pedido);

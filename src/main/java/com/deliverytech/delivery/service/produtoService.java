@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery.dto.ProdutoRequestDTO;
 import com.deliverytech.delivery.entity.Produto;
-import com.deliverytech.delivery.entity.ProdutoDTO;
 import com.deliverytech.delivery.repository.produtoRepository;
 import com.deliverytech.delivery.repository.restauranteRepository;
 
@@ -36,12 +36,12 @@ public class produtoService {
     /**
      * Listar todos os produtos
      */
-    public List<ProdutoDTO> listarTodos() {
+    public List<ProdutoRequestDTO> listarTodos() {
         List<Produto> produtos = produtoRepository.findAll();
-        List<ProdutoDTO> produtosDTO = new ArrayList<>();
+        List<ProdutoRequestDTO> produtosDTO = new ArrayList<>();
 
         for (Produto produto : produtos) {
-            ProdutoDTO dto = new ProdutoDTO(produto.getId(), produto.getNome(), produto.getDescricao(),
+            ProdutoRequestDTO dto = new ProdutoRequestDTO(produto.getId(), produto.getNome(), produto.getDescricao(),
                     produto.getPreco(), produto.getCategoria(), produto.getDisponivel());
             produtosDTO.add(dto);
         }
@@ -54,7 +54,7 @@ public class produtoService {
      */
     public Produto buscarPorId(Long id) {
         return produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
     }
 
     /**
@@ -63,7 +63,7 @@ public class produtoService {
     @Transactional
     public Produto atualizar(Long id, Produto produtoAtualizado) {
         Produto produtoExistente = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
 
         validarDadosProduto(produtoAtualizado);
 
@@ -82,7 +82,7 @@ public class produtoService {
     @Transactional
     public void excluir(Long id) {
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
 
         produtoRepository.delete(produto);
     }
@@ -92,16 +92,16 @@ public class produtoService {
      */
     private void validarDadosProduto(Produto produto) {
         if (produto.getNome() == null || produto.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Nome do produto é obrigatório");
+            throw new IllegalArgumentException("Nome do produto é obrigatório!");
         }
         if (produto.getDescricao() == null || produto.getDescricao().isEmpty()) {
-            throw new IllegalArgumentException("Descrição do produto é obrigatória");
+            throw new IllegalArgumentException("Descrição do produto é obrigatória!");
         }
         if (produto.getPreco() == null || produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Preço do produto deve ser maior que zero");
+            throw new IllegalArgumentException("Preço do produto deve ser maior que zero!");
         }
         if (produto.getCategoria() == null || produto.getCategoria().isEmpty()) {
-            throw new IllegalArgumentException("Categoria do produto é obrigatória");
+            throw new IllegalArgumentException("Categoria do produto é obrigatória!");
         }
     }
 
@@ -114,10 +114,10 @@ public class produtoService {
 
     public Produto inativar(Long id) {
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Produto " + id + " não encontrado."));
 
         if (!produto.getDisponivel()) {
-            throw new IllegalArgumentException("Produto já está inativo: " + id);
+            throw new IllegalArgumentException("Produto " + id + " já está inativo.");
         }
 
         produto.setDisponivel(false);

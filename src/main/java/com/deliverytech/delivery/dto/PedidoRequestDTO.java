@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.entity;
+package com.deliverytech.delivery.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PedidoDTO {
+public class PedidoRequestDTO {
     private Long id;
     private String numeroPedido;
     private LocalDateTime dataPedido;
@@ -20,6 +20,5 @@ public class PedidoDTO {
     private Long clienteId;
     private Long restauranteId;
     private String itens; // JSON ou string representando os itens do pedido
-
 
 }

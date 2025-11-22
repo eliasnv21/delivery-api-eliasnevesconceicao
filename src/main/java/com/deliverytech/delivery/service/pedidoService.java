@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery.dto.PedidoRequestDTO;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.entity.Pedido;
-import com.deliverytech.delivery.entity.PedidoDTO;
 import com.deliverytech.delivery.entity.Restaurante;
 import com.deliverytech.delivery.enums.StatusPedido;
 import com.deliverytech.delivery.repository.clienteRepository;
@@ -34,10 +34,10 @@ public class pedidoService {
     /**
      * Criar novo pedido
      */
-    public Pedido criarPedido(PedidoDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + dto.getClienteId()));
+    public Pedido criarPedido(PedidoRequestDTO dto) {
+        Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(() -> new IllegalArgumentException("Cliente " + dto.getClienteId() + " não encontrado."));
 
-        Restaurante restaurante = restauranteRepository.findById(dto.getRestauranteId()).orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + dto.getRestauranteId()));
+        Restaurante restaurante = restauranteRepository.findById(dto.getRestauranteId()).orElseThrow(() -> new IllegalArgumentException("Restaurante " + dto.getRestauranteId() + " não encontrado."));
 
         if (!cliente.getAtivo()) {
             throw new IllegalArgumentException("Cliente inativo não pode fazer pedidos");
@@ -72,10 +72,10 @@ public class pedidoService {
      * Atualizar status do pedido
      */
     public Pedido atualizarStatus(Long pedidoId, StatusPedido status) {
-        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: " + pedidoId));
+        Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new IllegalArgumentException("Pedido " + pedidoId + " não encontrado."));
 
         if (pedido.getStatus().equals(StatusPedido.ENTREGUE.name())) {
-            throw new IllegalArgumentException("Pedido já finalizado: " + pedidoId);
+            throw new IllegalArgumentException("Pedido " + pedidoId + " já finalizado.");
         }
 
         pedido.setStatus(status.name());

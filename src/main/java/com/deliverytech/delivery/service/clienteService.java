@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery.dto.ClienteRequestDTO;
+import com.deliverytech.delivery.dto.ClienteResponseDTO;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.repository.clienteRepository;
 
@@ -23,7 +25,7 @@ public class clienteService {
     public Cliente cadastrar(Cliente cliente) {
         // Validar email único
         if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            throw new IllegalArgumentException("Email já cadastrado: " + cliente.getEmail());
+            throw new IllegalArgumentException("Email " + cliente.getEmail() + " já cadastrado.");
         }
 
         // Validações de negócio
@@ -64,11 +66,11 @@ public class clienteService {
      * Atualizar dados do cliente
      */
     public Cliente atualizar(Long id, Cliente clienteAtualizado) {
-       Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+       Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente " + id + " não encontrado."));
 
        // Verificar se o email não está sendo usado por outro cliente
        if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) && clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
-        throw new IllegalArgumentException("Email já cadastrado: " + clienteAtualizado.getEmail());
+        throw new IllegalArgumentException("Email " + clienteAtualizado.getEmail() + " já cadastrado.");
        }
 
        // Atualizar campos
@@ -84,7 +86,7 @@ public class clienteService {
      * Inativar cliente (soft delete)
      */
     public void inativar(Long id) {
-        Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+        Cliente cliente = buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("Cliente " + id + " não encontrado."));
 
         cliente.inativar();
         clienteRepository.save(cliente);
@@ -100,15 +102,15 @@ public class clienteService {
 
     private void validarDadosCliente(Cliente cliente) {
         if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome é orbigatório");
+            throw new IllegalArgumentException("Nome é orbigatório!");
         }
 
         if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email é obrigatório");
+            throw new IllegalArgumentException("Email é obrigatório!");
         }
 
         if (cliente.getNome().length() < 2) {
-            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres");
+            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres!");
         }
     }
     

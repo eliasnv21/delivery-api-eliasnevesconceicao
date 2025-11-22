@@ -18,11 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliverytech.delivery.dto.ClienteRequestDTO;
+import com.deliverytech.delivery.dto.ClienteResponseDTO;
 import com.deliverytech.delivery.entity.Cliente;
 import com.deliverytech.delivery.service.clienteService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/cientes")
+@RequestMapping("/clientes")
 @CrossOrigin(origins = "*")
 public class clienteController {
     @Autowired
@@ -32,7 +36,7 @@ public class clienteController {
      * Cadastrar novo cliente
      */
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Validated @RequestBody Cliente cliente) {
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody Cliente cliente) {
         try {
             Cliente clienteSalvo = clienteService.cadastrar(cliente);
             return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
