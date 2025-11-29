@@ -1,4 +1,4 @@
--- Dados de exemplo para testes CORRIGIDOS
+-- Dados de exemplo para testes
 -- Arquivo: src/main/resources/data.sql
 
 -- Inserir clientes
@@ -15,31 +15,43 @@ INSERT INTO restaurantes (nome, categoria, endereco, telefone, taxa_entrega, ava
 
 -- Inserir produtos
 INSERT INTO produtos (nome, descricao, preco, categoria, disponivel, restaurante_id) VALUES
-('Pizza Margherita', 'Molho de tomate', 35.90, 'Pizza', true, 1), -- ID 1
-('Pizza Calabresa', 'Molho de tomate', 38.90, 'Pizza', true, 1),   -- ID 2
-('Lasanha', 'Bolonhesa', 28.90, 'Massa', true, 1),               -- ID 3
-('X-Burger', 'Hambúrguer', 18.90, 'Hambúrguer', true, 2),        -- ID 4
-('X-Bacon', 'Bacon', 22.90, 'Hambúrguer', true, 2),              -- ID 5
-('Batata Frita', 'Fritas', 12.90, 'Acompanhamento', true, 2),    -- ID 6
-('Combo Sashimi', '15 peças', 45.90, 'Sashimi', true, 3),        -- ID 7
-('Hot Roll', '8 peças', 32.90, 'Hot Roll', true, 3),             -- ID 8
-('Temaki', 'Atum', 15.90, 'Temaki', true, 3);                    -- ID 9
+-- Pizzaria Bella
+('Pizza Margherita', 'Molho de tomate, mussarela e manjericão', 35.90, 'Pizza', true, 1),
+('Pizza Calabresa', 'Molho de tomate, mussarela e calabresa', 38.90, 'Pizza', true, 1),
+('Lasanha Bolonhesa', 'Lasanha tradicional com molho bolonhesa', 28.90, 'Massa', true, 1),
 
--- Inserir pedidos (SEM A COLUNA ITENS)
-INSERT INTO pedidos (numero_pedido, data_pedido, status, valor_total, observacoes, cliente_id, restaurante_id) VALUES
-('PED1234567890', CURRENT_TIMESTAMP, 'PENDENTE', 54.80, 'Sem cebola', 1, 1), -- Pedido ID 1
-('PED1234567891', CURRENT_TIMESTAMP, 'CONFIRMADO', 41.80, '', 2, 2),         -- Pedido ID 2
-('PED1234567892', CURRENT_TIMESTAMP, 'ENTREGUE', 78.80, 'Wasabi', 3, 3);     -- Pedido ID 3
+-- Burger House
+('X-Burger', 'Hambúrguer, queijo, alface e tomate', 18.90, 'Hambúrguer', true, 2),
+('X-Bacon', 'Hambúrguer, queijo, bacon, alface e tomate', 22.90, 'Hambúrguer', true, 2),
+('Batata Frita', 'Porção de batata frita crocante', 12.90, 'Acompanhamento', true, 2),
 
--- Inserir Itens do Pedido (Tabela Relacional)
--- Pedido 1 (Pizzaria)
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (1, 35.90, 35.90, 1, 1);
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (1, 18.90, 18.90, 1, 2);
+-- Sushi Master
+('Combo Sashimi', '15 peças de sashimi variado', 45.90, 'Sashimi', true, 3),
+('Hot Roll Salmão', '8 peças de hot roll de salmão', 32.90, 'Hot Roll', true, 3),
+('Temaki Atum', 'Temaki de atum com cream cheese', 15.90, 'Temaki', true, 3);
 
--- Pedido 2 (Hamburgueria)
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (1, 18.90, 18.90, 2, 4);
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (2, 11.45, 22.90, 2, 6);
+-- Inserir pedidos de exemplo
+INSERT INTO pedidos (numero_pedido, data_pedido, status, valor_total, observacoes, cliente_id, restaurante_id, endereco_entrega, taxa_entrega, cep) VALUES
+('PED1234567890', '2025-11-21', 'PENDENTE', 54.80, 'Sem cebola na pizza', 1, 1, 'Rua A, 123 - São Paulo/SP', 5.00, '01310-100'),
+('PED1234567891', '2025-11-21', 'CONFIRMADO', 41.80, '', 2, 2, 'Rua B, 456 - São Paulo/SP', 3.50, '01310-200'),
+('PED1234567892', '2025-11-21', 'ENTREGUE', 78.80, 'Wasabi à parte', 3, 3, 'Rua Liberdade, 200 - São Paulo/SP', 8.00, '01502-000');
 
--- Pedido 3 (Japa)
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (1, 45.90, 45.90, 3, 7);
-INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES (1, 32.90, 32.90, 3, 8);
+-- Inserir itens dos pedidos
+INSERT INTO item_pedido (quantidade, preco_unitario, subtotal, pedido_id, produto_id) VALUES
+(1, 35.90, 35.90, 1, 1), -- Pizza Margherita no pedido 1
+(1, 18.90, 18.90, 1, 2), -- Pizza Calabresa no pedido 1
+
+(1, 18.90, 18.90, 2, 4), -- X-Burger no pedido 2
+(1, 12.90, 12.90, 2, 6), -- Batata Frita no pedido 2
+
+(1, 45.90, 45.90, 3, 7), -- Combo Sashimi no pedido 3
+(1, 32.90, 32.90, 3, 8), -- Hot Roll Salmão no pedido 3
+(1, 15.90, 15.90, 3, 9); -- Temaki Atum no pedido 3
+
+-- Inserir usuários
+INSERT INTO usuarios (id, nome, email, senha, role, ativo, data_criacao , restaurante_id) VALUES
+(1, 'Admin Sistema', 'admin@delivery.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'ADMIN', 1, '2025-07-31 00:00:00', NULL),
+(2, 'João Cliente', 'joao@email.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'CLIENTE', 1, '2025-07-31 00:00:00', NULL),
+(3, 'Maria Cliente', 'maria@email.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'CLIENTE', 1, '2025-07-31 00:00:00', NULL),
+(4, 'Pizza Palace', 'pizza@palace.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'RESTAURANTE', 1, '2025-07-31 00:00:00', 1),
+(5, 'Burger King', 'burger@king.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKXulpZR8J4OY6Nd4EMCFyZw4ufC', 'RESTAURANTE', 1, '2025-07-31 00:00:00', 2);

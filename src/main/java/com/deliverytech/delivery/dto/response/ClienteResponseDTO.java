@@ -1,6 +1,5 @@
 package com.deliverytech.delivery.dto.response;
 
-import com.deliverytech.delivery.entity.Cliente;
 import lombok.Data;
 
 @Data
