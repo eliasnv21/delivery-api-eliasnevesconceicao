@@ -1,0 +1,1565 @@
+{
+	"info": {
+		"_postman_id": "950b4fe5-09c2-4720-8fdc-ed8d018123df",
+		"name": "API Delivery Entrega Final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49593205",
+		"_collection_link": "https://eliasnv21-8675742.postman.co/workspace/Elias's-Workspace~9cc30ba2-0069-428d-8d97-9af287e15e0a/collection/49593205-950b4fe5-09c2-4720-8fdc-ed8d018123df?action=share&source=collection_link&creator=49593205"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Cadastrar novo usuário",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Cliente Teste\",\r\n  \"email\": \"teste_cliente@email.com\",\r\n  \"senha\": \"123456\",\r\n  \"role\": \"CLIENTE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login com novo usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"teste_cliente@email.com\",\r\n  \"senha\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cliente",
+			"item": [
+				{
+					"name": "Criar cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"João teste token\",\r\n    \"email\": \"joao.token@example.com\",\r\n    \"telefone\": \"+5531999999999\",\r\n    \"endereco\": \"Rua das Flores, 123 - Contagem, MG\",\r\n    \"dataCadastro\": \"2025-06-26T21:19:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"João Atualizado\",\r\n    \"email\": \"atualizado@email.com\",\r\n    \"telefone\": \"(11) 99999-1111\",\r\n    \"endereco\": \"Rua Atualizada, 456\",\r\n    \"ativo\": true\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/clientes/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"4"
+							]
+						},
+						"description": "Generated from cURL: curl --request PUT \\\r\n  --url http://localhost:8080/clientes/1 \\\r\n  --header 'Content-Type: application/json' \\\r\n  --data '{\r\n    \"nome\": \"Cliente Atualizado\",\r\n    \"email\": \"atualizado@email.com\",\r\n    \"telefone\": \"(11) 99999-1111\",\r\n    \"endereco\": \"Rua Atualizada, 456\",\r\n    \"ativo\": true\r\n  }'\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar ou Desativar Cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/clientes/4/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"4",
+								"status"
+							]
+						},
+						"description": "Generated from cURL: curl --request DELETE \\\r\n  --url http://localhost:8080/clientes/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos os clientes ativos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes"
+							]
+						},
+						"description": "Generated from cURL: curl --request GET \\\r\n  --url http://localhost:8080/clientes"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar cliente por ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ0xJRU5URSIsInVzZXJJZCI6Niwic3ViIjoiZWxpYXNfY2xpZW50ZUB0ZXN0ZS5jb20iLCJpYXQiOjE3NjQ1NDQzODQsImV4cCI6MTc2NDYzMDc4NH0.kXZYIC-E9u33PtpWiyqxumo-BnJ6P4vymSrWtKz90lI",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/clientes/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"4"
+							]
+						},
+						"description": "Generated from cURL: curl --request GET \\\r\n  --url http://localhost:8080/clientes/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar cliente por nome",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/clientes/buscar?nome=João",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"buscar"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "João"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar cliente por email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/clientes/email/maria@email.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"email",
+								"maria@email.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pedido",
+			"item": [
+				{
+					"name": "Criar pedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"numeroPedido\": \"PED02355\",\r\n    \"dataPedido\": \"2025-07-04T11:19:00\",\r\n    \"valorTotal\": 0.0,\r\n    \"observacoes\": \"sem cebola\",\r\n    \"clienteId\": 2,\r\n    \"restauranteId\": 1,\r\n    \"enderecoEntrega\": \"Rua B, 456\",\r\n    \"cep\": \"32183000\",\r\n    \"itens\": [\r\n        {\r\n            \"produtoId\": 1,\r\n            \"quantidade\": 2\r\n        },\r\n        {\r\n            \"produtoId\": 3,\r\n            \"quantidade\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/pedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar pedidos por cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/cliente/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"cliente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status do pedido p/ confirmado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/1/CONFIRMADO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"1",
+								"CONFIRMADO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status do pedido p/ preparando",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/1/PREPARANDO",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"1",
+								"PREPARANDO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status do pedido p/ saiu para entrega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/1/SAIU_PARA_ENTREGA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"1",
+								"SAIU_PARA_ENTREGA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status do pedido p/ entregue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/1/ENTREGUE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"1",
+								"ENTREGUE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por cliente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/cliente/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"cliente",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/restaurante/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"restaurante",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos Por Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/status/PENDENTE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"status",
+								"PENDENTE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos Recentes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/recentes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"recentes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos por periodo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pedidos/periodo?inicio=2024-06-25T00:00:00&fim=2024-07-02T23:59:59",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pedidos",
+								"periodo"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2024-06-25T00:00:00"
+								},
+								{
+									"key": "fim",
+									"value": "2024-07-02T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "produto",
+			"item": [
+				{
+					"name": "Criar produto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Produto 14\",\n    \"descricao\": \"Descrição do produto\",\n    \"preco\": 19.99,\n    \"categoria\": \"Bebidas\",\n    \"disponivel\": true,\n    \"restauranteId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar produto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Produto Atualizado\",\n    \"descricao\": \"Nova descrição\",\n    \"preco\": 29.99,\n    \"categoria\": \"Lanches\",\n    \"disponivel\": true,\n    \"restauranteId\": 1\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar/Desativar produto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/2/ativar-desativar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"2",
+								"ativar-desativar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar produtos por restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/restaurante/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"restaurante",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos os produtos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar produto por ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Preço Menor ou Igual",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/preco/20.00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"preco",
+								"20.00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Produtos por categoria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/categoria/Temaki",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"categoria",
+								"Temaki"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Produtos por restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/restaurante/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"restaurante",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Produtos disponiveis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/disponiveis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"disponiveis"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "restaurante",
+			"item": [
+				{
+					"name": "Cadastrar restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Exemplo dois 3\",\n    \"categoria\": \"Japonês\",\n    \"endereco\": \"Rua das Flores, 100\",\n    \"telefone\": \"+5511999998888\",\n    \"taxaEntrega\": 5.00,\n    \"avaliacao\": 4.5,\n    \"cep\": \"32183030\",\n    \"ativo\": true\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/restaurantes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Restaurante Atualizado\",\n    \"categoria\": \"Japonesa\",\n    \"cep\": \"12345-678\",\n    \"endereco\": \"Rua Nova, 200\",\n    \"telefone\": \"+5511988887777\",\n    \"taxaEntrega\": 7.50,\n    \"avaliacao\": 4.8,\n    \"ativo\": true\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar/Desativar restaurante",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/4/ativar-desativar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"4",
+								"ativar-desativar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar pedidos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar restaurante pelo ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar restaurante por categoria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/categoria/Italiana",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"categoria",
+								"Italiana"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Taxa menor ou igual a 5",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/taxa-entrega?taxa=5.00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"taxa-entrega"
+							],
+							"query": [
+								{
+									"key": "taxa",
+									"value": "5.00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Top 5",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/top-cinco",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"top-cinco"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Relatiorio Vendas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/restaurantes/relatorio-vendas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"restaurantes",
+								"relatorio-vendas"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "teste cache",
+			"item": [
+				{
+					"name": "Primeira consulta (busca na db)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Segunda consulta (busca na memória)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cria novo dado e elimina o cache",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Teste Cache\",\n    \"descricao\": \"Descrição do produto\",\n    \"preco\": 19.99,\n    \"categoria\": \"Bebidas\",\n    \"disponivel\": true,\n    \"restauranteId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Primeira consulta (busca na db)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/disponiveis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"disponiveis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Segunda consulta (busca na memória)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/disponiveis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"disponiveis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Altera status e elimina cache",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjgsInN1YiI6ImVsaWFzX2FkbWluQHRlc3RlLmNvbSIsImlhdCI6MTc2NDU1MzQ1MywiZXhwIjoxNzY0NjM5ODUzfQ.cnRWRfK1jkqfphitJNbNeOiiac8FUOhZ4fcAQh_7hB8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/produtos/2/ativar-desativar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"2",
+								"ativar-desativar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

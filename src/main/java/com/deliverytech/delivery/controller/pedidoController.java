@@ -1,6 +1,7 @@
 package com.deliverytech.delivery.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.deliverytech.delivery.dto.request.ItemPedidoRequestDTO;
@@ -67,7 +69,7 @@ public class pedidoController {
     /**
      * Atualizar status do pedido
      */
-    @PutMapping("/{id}/{status}")
+    @PutMapping("/{pedidoId}/{status}")
     @Operation(summary = "Atualizar status do pedido", description = "Atualiza o status de um pedido específico pelo ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Status do pedido atualizado com sucesso"),
@@ -120,6 +122,53 @@ public class pedidoController {
         PedidoResponseDTO pedido = pedidoService.cancelarPedido(id);
         return ResponseEntity.ok(pedido);
 
+    }
+
+    /**
+     * Listar pedidos por restaurante
+     */
+    @GetMapping("/restaurante/{restauranteId}")
+    @Operation(summary = "Listar pedidos por restaurante", description = "Lista todos os pedidos de um restaurante específico")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPorRestaurante(@PathVariable Long restauranteId) {
+        // Você precisará criar este método no service: listarPedidosPorRestaurante
+        List<PedidoResponseDTO> pedidos = pedidoService.findByRestauranteIdOrderByDataPedidoDesc(restauranteId);
+        return ResponseEntity.ok(pedidos);
+    }
+
+    /**
+     * Listar pedidos por status
+     */
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Listar pedidos por status", description = "Lista pedidos filtrados pelo status (ex: PENDENTE, ENTREGUE)")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPorStatus(@PathVariable StatusPedido status) {
+        // Criar no service: listarPedidosPorStatus
+        List<PedidoResponseDTO> pedidos = pedidoService.findByStatus(status);;
+        return ResponseEntity.ok(pedidos);
+    }
+
+    /**
+     * Listar pedidos recentes (últimos criados)
+     */
+    @GetMapping("/recentes")
+    @Operation(summary = "Listar os 10 pedidos mais recentes", description = "Retorna os últimos pedidos cadastrados")
+    public ResponseEntity<List<PedidoResponseDTO>> listarRecentes() {
+        // Criar no service: listarPedidosRecentes (pode usar findTop10ByOrderByDataPedidoDesc)
+        List<PedidoResponseDTO> pedidos = pedidoService.findTop10ByOrderByDataPedidoDesc();
+        return ResponseEntity.ok(pedidos);
+    }
+
+    /**
+     * Listar pedidos por período
+     */
+    @GetMapping("/periodo")
+    @Operation(summary = "Listar pedidos por período", description = "Filtra pedidos entre duas datas")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPorPeriodo(
+            @RequestParam LocalDateTime inicio, // Formato ISO (ex: 2025-11-01T00:00:00)
+            @RequestParam LocalDateTime fim) {
+        
+        // Criar no service: listarPedidosPorPeriodo(inicio, fim)
+        List<PedidoResponseDTO> pedidos = pedidoService.findByDataPedidoBetween(inicio, fim);;
+        return ResponseEntity.ok(pedidos);
     }
 
 }

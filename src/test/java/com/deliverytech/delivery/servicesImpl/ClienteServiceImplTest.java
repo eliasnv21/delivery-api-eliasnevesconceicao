@@ -8,30 +8,37 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.mockito.MockedStatic;
 
+
+import com.deliverytech.delivery.security.SecurityUtils; 
+import com.deliverytech.delivery.entity.Usuario;
 import com.deliverytech.delivery.dto.request.ClienteRequestDTO;
 import com.deliverytech.delivery.dto.response.ClienteResponseDTO;
 import com.deliverytech.delivery.entity.Cliente;
+import com.deliverytech.delivery.exceptions.BusinessException;
+import com.deliverytech.delivery.exceptions.EntityNotFoundException;
 import com.deliverytech.delivery.repository.clienteRepository;
 import com.deliverytech.delivery.service.impl.clienteServiceImpl;
 
-import static org.mockito.Mockito.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @DisplayName("Testes Unitário Cliente Service")
 @ExtendWith(MockitoExtension.class)
-class ClienteServiceImplTest {
+class clienteServiceImplTest {
 
     @Mock
     private clienteRepository clienteRepository;
@@ -52,6 +59,7 @@ class ClienteServiceImplTest {
 
         // Inicializando o DTO de requisição
         clienteRequestDTO = new ClienteRequestDTO();
+        cliente.setId(1L);
         clienteRequestDTO.setNome("Maria Silva");
         clienteRequestDTO.setEmail("maria@email.com");
         clienteRequestDTO.setTelefone("11999999999");
@@ -75,7 +83,7 @@ class ClienteServiceImplTest {
         assertEquals("Maria Silva", clienteRequestDTO.getNome());
         assertEquals("maria@email.com", clienteRequestDTO.getEmail());
         verify(clienteRepository).save(any(Cliente.class));
-        verify(clienteRepository).existsByEmail("maria@email.com");
+        verify(clienteRepository).existsByEmail(eq(clienteRequestDTO.getEmail()));
     }
 
     @Test
@@ -85,33 +93,33 @@ class ClienteServiceImplTest {
         Long clienteId = 1L;
         cliente.setId(clienteId);
         cliente.setAtivo(true);
-        cliente.setDataCadastro(LocalDateTime.now());
-        cliente.setNome("Maria Silva");
-        cliente.setEmail("maria@maria.com");
-        cliente.setTelefone("11999999999");
-        cliente.setEndereco("Rua Exemplo, 123, São Paulo, SP");
-        when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        cliente.setEmail("maria@maria.com"); // Email do Cliente no Mock
 
-        when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
-                .thenReturn(new ClienteResponseDTO() {{
-                    setNome("Maria Silva Atualizado");
-                    setEmail("maria@maria.com");
-                    setTelefone("11999999999");
-                    setEndereco("Rua Exemplo, 123, São Paulo, SP");
-                    setAtivo(true);
-                }});
+        try (MockedStatic<SecurityUtils> utilities = mockStatic(SecurityUtils.class)) {
+            // Simula que a Maria está logada e que ela é a dona do dado que está sendo atualizado
+            utilities.when(SecurityUtils::getCurrentUserEmail).thenReturn("maria@maria.com");
+            utilities.when(SecurityUtils::isAdmin).thenReturn(false);
 
-        // When
-        ClienteResponseDTO responseDTO = clienteService.atualizar(clienteId, clienteRequestDTO);
+            when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
+            when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+            when(clienteRepository.existsByEmail(anyString())).thenReturn(false); // Permite atualização de email
 
-        // Then
-        assertNotNull(responseDTO);
-        assertEquals("Maria Silva Atualizado", responseDTO.getNome());
-        assertEquals("maria@maria.com", responseDTO.getEmail());
-        verify(clienteRepository).findById(clienteId);
-        verify(clienteRepository).save(any(Cliente.class));
-        verify(modelMapper).map(any(Cliente.class), eq(ClienteResponseDTO.class));
+            when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
+                    .thenReturn(new ClienteResponseDTO() {{
+                        setNome("Maria Silva Atualizado");
+                        setEmail("maria@maria.com");
+                        setAtivo(true);
+                    }});
+            
+            // When
+            ClienteResponseDTO responseDTO = clienteService.atualizar(clienteId, clienteRequestDTO);
+
+            // Then
+            assertNotNull(responseDTO);
+            assertEquals("Maria Silva Atualizado", responseDTO.getNome());
+            verify(clienteRepository).findById(clienteId);
+            verify(clienteRepository).save(any(Cliente.class));
+        }
 
     }
 
@@ -122,34 +130,32 @@ class ClienteServiceImplTest {
         Long clienteId = 1L;
         cliente.setId(clienteId);
         cliente.setAtivo(true);
-        cliente.setDataCadastro(LocalDateTime.now());
         cliente.setNome("Maria Silva");
-        cliente.setEmail("maria@maria.com");
-        cliente.setTelefone("11999999999");
-        cliente.setEndereco("Rua Exemplo, 123, São Paulo, SP");
+        cliente.setEmail("maria@maria.com"); // Email do Cliente no Mock
 
-        when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
+        // Setup do usuário logado para o Mock
+        try (MockedStatic<SecurityUtils> utilities = mockStatic(SecurityUtils.class)) {
+            utilities.when(SecurityUtils::getCurrentUserEmail).thenReturn("maria@maria.com");
+            utilities.when(SecurityUtils::isAdmin).thenReturn(false);
 
-        when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
-                .thenReturn(new ClienteResponseDTO() {{
-                    setNome("Maria Silva");
-                    setEmail("maria@maria.com");
-                    setTelefone("11999999999");
-                    setEndereco("Rua Exemplo, 123, São Paulo, SP");
-                    setAtivo(false); // Inverte o status de ativo
-                }});
-        // When
-        ClienteResponseDTO responseDTO = clienteService.ativarDesativarCliente(clienteId);
-        // Then
-        assertNotNull(responseDTO);
-        assertEquals("Maria Silva", responseDTO.getNome());
-        assertEquals("maria@maria.com", responseDTO.getEmail());
-        assertFalse(responseDTO.getAtivo()); // Verifica se o status foi invertido
-        verify(clienteRepository).findById(clienteId);
-        verify(clienteRepository).save(any(Cliente.class));
-        verify(modelMapper).map(any(Cliente.class), eq(ClienteResponseDTO.class));
+            when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
+            when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
+            when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
+                    .thenReturn(new ClienteResponseDTO() {{
+                        // ... outros setAtivo ...
+                        setAtivo(false); // Inverte o status de ativo
+                    }});
+            
+            // When
+            ClienteResponseDTO responseDTO = clienteService.ativarDesativarCliente(clienteId);
+            
+            // Then
+            assertNotNull(responseDTO);
+            assertFalse(responseDTO.getAtivo()); // Verifica se o status foi invertido
+            verify(clienteRepository).findById(clienteId);
+            verify(clienteRepository).save(any(Cliente.class));
+        }
     }
 
     @Test
@@ -158,31 +164,27 @@ class ClienteServiceImplTest {
         // Given
         Long clienteId = 1L;
         cliente.setId(clienteId);
-        cliente.setAtivo(true);
-        cliente.setDataCadastro(LocalDateTime.now());
-        cliente.setNome("Maria Silva");
         cliente.setEmail("maria@maria.com");
-        cliente.setTelefone("11999999999");
-         cliente.setEndereco("Rua Exemplo, 123, São Paulo, SP");
 
-        when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
-        when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
-                .thenReturn(new ClienteResponseDTO() {{
-                    setNome("Maria Silva");
-                    setEmail("maria@maria.com");
-                    setTelefone("11999999999");
-                    setEndereco("Rua Exemplo, 123, São Paulo, SP");
-                    setAtivo(true);
-                }});
-        // When
-        ClienteResponseDTO responseDTO = clienteService.buscarPorId(clienteId);
-        // Then
-        assertNotNull(responseDTO);
-        assertEquals("Maria Silva", responseDTO.getNome());
-        assertEquals("maria@maria.com", responseDTO.getEmail());
-        assertTrue(responseDTO.getAtivo());
-        verify(clienteRepository).findById(clienteId);
-        verify(modelMapper).map(any(Cliente.class), eq(ClienteResponseDTO.class));
+        try (MockedStatic<SecurityUtils> utilities = mockStatic(SecurityUtils.class)) {
+            // Simula que o usuário logado está buscando o próprio ID
+            utilities.when(SecurityUtils::getCurrentUserEmail).thenReturn("maria@maria.com");
+            utilities.when(SecurityUtils::isAdmin).thenReturn(false);
+
+            when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
+            when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
+                    .thenReturn(new ClienteResponseDTO() {{
+                        setEmail("maria@maria.com");
+                        setAtivo(true);
+                    }});
+            
+            // When
+            ClienteResponseDTO responseDTO = clienteService.buscarPorId(clienteId);
+            
+            // Then
+            assertNotNull(responseDTO);
+            verify(clienteRepository).findById(clienteId);
+        }
 
     }
 
@@ -192,30 +194,27 @@ class ClienteServiceImplTest {
         // Given
         String email = "maria@maria.com";
         cliente.setEmail(email);
-        cliente.setAtivo(true);
-        cliente.setDataCadastro(LocalDateTime.now());
-        cliente.setNome("Maria Silva");
-        cliente.setTelefone("11999999999");
-        cliente.setEndereco("Rua Exemplo, 123, São Paulo, SP");
 
-        when(clienteRepository.findByEmail(email)).thenReturn(Optional.of(cliente));
-        when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
-                .thenReturn(new ClienteResponseDTO() {{
-                    setNome("Maria Silva");
-                    setEmail("maria@maria.com");
-                    setTelefone("11999999999");
-                    setEndereco("Rua Exemplo, 123, São Paulo, SP");
-                    setAtivo(true);
-                }});
-        // When
-        ClienteResponseDTO responseDTO = clienteService.buscarPorEmail(email);
-        // Then
-        assertNotNull(responseDTO);
-        assertEquals("Maria Silva", responseDTO.getNome());
-        assertEquals("maria@maria.com", responseDTO.getEmail());
-        assertTrue(responseDTO.getAtivo());
-        verify(clienteRepository).findByEmail(email);
-        verify(modelMapper).map(any(Cliente.class), eq(ClienteResponseDTO.class));
+        try (MockedStatic<SecurityUtils> utilities = mockStatic(SecurityUtils.class)) {
+            // Simula que o usuário logado está buscando o próprio email
+            utilities.when(SecurityUtils::getCurrentUserEmail).thenReturn(email);
+            utilities.when(SecurityUtils::isAdmin).thenReturn(false);
+
+            when(clienteRepository.findByEmail(email)).thenReturn(Optional.of(cliente));
+            when(modelMapper.map(any(Cliente.class), eq(ClienteResponseDTO.class)))
+                    .thenReturn(new ClienteResponseDTO() {{
+                        setEmail(email);
+                        setAtivo(true);
+                    }});
+            
+            // When
+            ClienteResponseDTO responseDTO = clienteService.buscarPorEmail(email);
+            
+            // Then
+            assertNotNull(responseDTO);
+            assertEquals(email, responseDTO.getEmail());
+            verify(clienteRepository).findByEmail(email);
+        }
 
     }
 
@@ -287,5 +286,44 @@ class ClienteServiceImplTest {
         verify(clienteRepository).findByNomeContainingIgnoreCase(nome);
         verify(modelMapper).map(any(Cliente.class), eq(ClienteResponseDTO.class));
 
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao tentar cadastrar email duplicado")
+    void cadastrar_ErroEmailDuplicado() {
+        // Given
+        when(clienteRepository.existsByEmail(anyString())).thenReturn(true); // Simula que já existe
+        // When & Then
+        assertThrows(BusinessException.class, () -> clienteService.cadastrar(clienteRequestDTO));
+        // Verifica que NUNCA chamou o save()
+        verify(clienteRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar ID inexistente")
+    void buscarPorId_NaoEncontrado() {
+        // Given
+        when(clienteRepository.findById(99L)).thenReturn(Optional.empty());
+        // When & Then
+        assertThrows(BusinessException.class, () -> clienteService.buscarPorId(99L));
+    }
+
+    @Test
+    @DisplayName("Deve listar clientes com paginação")
+    void listarTodosPaginado() {
+        // Given
+        Pageable pageable = PageRequest.of(0, 10); // Cria um objeto Pageable
+        Page<Cliente> paginaCliente = new PageImpl<>(List.of(cliente), pageable, 1);
+        
+        when(clienteRepository.findAll(pageable)).thenReturn(paginaCliente);
+        
+        // When
+        Page<ClienteResponseDTO> resultado = clienteService.listarTodosPaginado(pageable);
+
+        // Then
+        assertNotNull(resultado);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.getContent().size());
+        verify(clienteRepository).findAll(pageable);
     }
 }

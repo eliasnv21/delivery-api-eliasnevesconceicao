@@ -1,0 +1,14 @@
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$4.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$6.class
+com\deliverytech\delivery\controller\PedidoControllerIT.class
+com\deliverytech\delivery\config\DataBaseTest.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$5.class
+com\deliverytech\delivery\controller\ClienteControllerIT.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$1.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$2.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest$3.class
+com\deliverytech\delivery\servicesImpl\PedidoServiceImplTest.class
+com\deliverytech\delivery\swagger\SwaggerIntegrationTest.class
+com\deliverytech\delivery\controller\TestDataConfiguration.class
+com\deliverytech\delivery\servicesImpl\clienteServiceImplTest.class
+com\deliverytech\delivery\ApplicationTests.class

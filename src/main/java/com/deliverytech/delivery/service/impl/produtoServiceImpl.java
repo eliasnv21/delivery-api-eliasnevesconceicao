@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.AccessDeniedException;
 
 import com.deliverytech.delivery.dto.request.ProdutoRequestDTO;
 import com.deliverytech.delivery.dto.response.ProdutoResponseDTO;
@@ -12,6 +15,7 @@ import com.deliverytech.delivery.entity.Restaurante;
 import com.deliverytech.delivery.exceptions.BusinessException;
 import com.deliverytech.delivery.repository.produtoRepository;
 import com.deliverytech.delivery.repository.restauranteRepository;
+import com.deliverytech.delivery.security.SecurityUtils;
 import com.deliverytech.delivery.service.produtoService;
 
 import java.math.BigDecimal;
@@ -32,7 +36,16 @@ public class produtoServiceImpl implements produtoService {
     private ModelMapper modelMapper;
 
     @Override
+    @CacheEvict(value = { "produtos", "produtos-disponiveis" }, allEntries = true)
     public ProdutoResponseDTO cadastrar(ProdutoRequestDTO dto) {
+        // Validação de segurança
+        if (SecurityUtils.isRestaurante()) {
+            Long restauranteIdLogado = SecurityUtils.getCurrentRestauranteId();
+            // Impede que o restaurante 1 cadastre algo para o restaurante 2
+            if (!dto.getRestauranteId().equals(restauranteIdLogado)) {
+                throw new AccessDeniedException("Você não pode cadastrar produtos para outro restaurante.");
+            }
+        }
         // Converter DTO para entidade
         Produto produto = modelMapper.map(dto, Produto.class);
         produto.setRestaurante(restauranteRepository.findById(dto.getRestauranteId()).get());
@@ -52,9 +65,18 @@ public class produtoServiceImpl implements produtoService {
     }
 
     @Override
+    @CacheEvict(value = { "produtos", "produtos-disponiveis" }, allEntries = true)
     public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO dto) {
         // Buscar produto existente
         Produto produtoExistente = produtoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+        // Validação de segurança
+        if (SecurityUtils.isRestaurante()) {
+            Long restauranteIdLogado = SecurityUtils.getCurrentRestauranteId();
+            // Verifica se o produto que está sendo editado pertence ao restaurante logado
+            if (!produtoExistente.getRestaurante().getId().equals(restauranteIdLogado)) {
+                throw new AccessDeniedException("Este produto não pertence ao seu restaurante.");
+            }
+        }
         Optional<Restaurante> restaurante = restauranteRepository.findById(dto.getRestauranteId());
         // Validar dados do produto
         if (dto.getNome() == null || dto.getNome().isEmpty()) {
@@ -83,10 +105,18 @@ public class produtoServiceImpl implements produtoService {
     }
 
     @Override
+    @CacheEvict(value = { "produtos", "produtos-disponiveis" }, allEntries = true)
     public ProdutoResponseDTO ativarDesativarProduto(Long id) {
         // Buscar produto existente
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+        Produto produto = produtoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+        // Validação de segurança
+        if (SecurityUtils.isRestaurante()) {
+            Long restauranteIdLogado = SecurityUtils.getCurrentRestauranteId();
+            // Verifica se o produto que está sendo editado pertence ao restaurante logado
+            if (!produto.getRestaurante().getId().equals(restauranteIdLogado)) {
+                throw new AccessDeniedException("Este produto não pertence ao seu restaurante e não pode ser ativado/desativado.");
+            }
+        }
         // Inverter disponibilidade do produto
         produto.setDisponivel(!produto.getDisponivel());
         // Salvar produto atualizado
@@ -136,11 +166,11 @@ public class produtoServiceImpl implements produtoService {
             throw new BusinessException("Nenhum produto encontrado na faixa de preço: " + precoMinimo + " a " + precoMaximo);
         }
         // Converter lista de entidades para lista de DTOs
-        return produtos.stream()
-                .filter(produto -> produto.getPreco().compareTo(precoMinimo) >= 0).map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class)).toList();
+        return produtos.stream().filter(produto -> produto.getPreco().compareTo(precoMinimo) >= 0).map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class)).toList();
     }
 
     @Override
+    @Cacheable(value = "produtos")
     public List<ProdutoResponseDTO> buscarTodosProdutos() {
         // Buscar todos os produtos
         List<Produto> produtos = produtoRepository.findAll();
@@ -150,6 +180,31 @@ public class produtoServiceImpl implements produtoService {
         // Converter lista de entidades para lista de DTOs
         return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class)).toList();
     }
+
+    @Override
+    @Cacheable(value = "produtos-disponiveis")
+    public List<ProdutoResponseDTO> buscarProdutosDisponiveis(boolean disponivel) {
+        
+        List<Produto> produtos;
+        
+        // Lógica de busca
+        if (disponivel) {
+            produtos = produtoRepository.findByDisponivelTrue();
+        } else {
+            produtos = produtoRepository.findAll().stream()
+                    .filter(p -> !p.getDisponivel())
+                    .toList();
+        }
+
+        if (produtos.isEmpty()) {
+             throw new BusinessException("Nenhum produto encontrado com a disponibilidade: " + disponivel);
+        }
+
+        return produtos.stream()
+                .map(produto -> modelMapper.map(produto, ProdutoResponseDTO.class))
+                .toList();
+    }
+    
     //buscar produtos com preço menor ou igual a um valor específico
     @Override
     public List<ProdutoResponseDTO> buscarPorPrecoMenorOuIgual(BigDecimal valor) {

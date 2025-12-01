@@ -17,6 +17,8 @@ import com.deliverytech.delivery.dto.response.UsuarioResponseDTO;
 import com.deliverytech.delivery.entity.Usuario;
 import com.deliverytech.delivery.enums.Role;
 import com.deliverytech.delivery.exceptions.BusinessException;
+import com.deliverytech.delivery.repository.clienteRepository;
+import com.deliverytech.delivery.repository.restauranteRepository;
 import com.deliverytech.delivery.repository.usuarioRepository;
 import com.deliverytech.delivery.security.JwtUtil;
 import com.deliverytech.delivery.service.usuarioService;
@@ -31,6 +33,12 @@ public class usuarioServiceImpl implements usuarioService {
 
     @Autowired
     private usuarioRepository usuarioRepository;
+
+    @Autowired
+    private clienteRepository clienteRepository;
+
+    @Autowired
+    restauranteRepository restauranteRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;

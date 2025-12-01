@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ValidationErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
@@ -63,5 +65,37 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ValidationErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String titulo = "Erro de validação";
+
+        if (ex.getMessage().toLowerCase().contains("Não encontrado")) {
+            status = HttpStatus.NOT_FOUND;
+            titulo = "Recurso não encontrado";
+        }
+
+        ValidationErrorResponse error = new ValidationErrorResponse(
+                status.value(),
+                titulo,
+                ex.getMessage(), // Aqui vai aparecer "Produto não encontrado: 10"
+                LocalDateTime.now()
+        );
+        
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ValidationErrorResponse> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        ValidationErrorResponse error = new ValidationErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "Acesso Negado",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }

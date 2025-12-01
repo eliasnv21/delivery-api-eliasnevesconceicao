@@ -25,13 +25,15 @@ public interface pedidoRepository extends JpaRepository <Pedido, Long> {
     List<Pedido> findByRestauranteIdOrderByDataPedidoDesc (Long restauranteId);
 
      // Pedidos por status
-    List<Pedido> findByStatus(StatusPedido status);
+    List<Pedido> findByStatus(String status);
 
     // 10 pedidos mais recentes
     List<Pedido> findTop10ByOrderByDataPedidoDesc();
 
     // Pedidos por período
     List<Pedido> findByDataPedidoBetween(LocalDateTime inicio, LocalDateTime fim);
+
+    
 
 
 }

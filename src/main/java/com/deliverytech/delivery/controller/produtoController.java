@@ -147,7 +147,7 @@ public class produtoController {
     }
 
     /**
-     * Ativar?//Desativar produto
+     * Ativar/Desativar produto
      */
     @PatchMapping("/{id}/ativar-desativar")
     @Operation(summary = "Ativar/Desativar produto", description = "Ativa ou desativa um produto pelo ID")
@@ -171,6 +171,26 @@ public class produtoController {
     })
     public ResponseEntity<List<ProdutoResponseDTO>> buscarPorPrecoMenorOuIgual(@PathVariable BigDecimal valor) {
         List<ProdutoResponseDTO> produtos = produtoService.buscarPorPrecoMenorOuIgual(valor);
+        return ResponseEntity.ok(produtos);
+    }
+
+    /**
+     * Listar apenas produtos disponíveis (ativos)
+     */
+    @GetMapping("/disponiveis")
+    @Operation(summary = "Listar produtos disponíveis", description = "Lista apenas os produtos que estão ativos/disponíveis para venda")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de produtos recuperada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Nenhum produto disponível encontrado")
+    })
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosDisponiveis() {
+        // Chama o service passando 'true'
+        List<ProdutoResponseDTO> produtos = produtoService.buscarProdutosDisponiveis(true);
+        
+        if (produtos.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Retorna 204 se não tiver nada
+        }
+        
         return ResponseEntity.ok(produtos);
     }
 }
