@@ -98,7 +98,7 @@ O projeto utiliza **PostgreSQL** rodando em container. Para inspecionar as tabel
 * **Porta:** `5432`
 * **Database:** `deliverydb`
 * **Usuário:** `delivery` 
-* **Senha:** `delibery123` 
+* **Senha:** `delivery123` 
 
 ### Connection Strings (JDBC)
 * **Aplicação (Interno Docker):** `jdbc:postgresql://postgres:5432/deliverydb`
